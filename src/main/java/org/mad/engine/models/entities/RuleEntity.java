@@ -7,14 +7,17 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@Table(name = "rules")
 public class RuleEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String name;
+
     @Lob
-    private String ruleJson;
+    private String rule_json;
 
     public RuleEntity() {
     }
