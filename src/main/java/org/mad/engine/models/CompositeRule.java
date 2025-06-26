@@ -3,7 +3,7 @@ package org.mad.engine.models;
 import java.util.List;
 import java.util.Map;
 
-public class CompositeRule implements  Rule{
+public abstract class CompositeRule implements  Rule{
     protected List<Rule> children;
 
 

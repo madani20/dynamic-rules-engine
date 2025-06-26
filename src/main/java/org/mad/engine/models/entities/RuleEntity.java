@@ -16,7 +16,7 @@ public class RuleEntity {
 
     private String name;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String rule_json;
 
     public RuleEntity() {

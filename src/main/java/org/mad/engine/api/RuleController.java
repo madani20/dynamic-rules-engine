@@ -1,7 +1,8 @@
 package org.mad.engine.api;
 
 import org.mad.engine.services.RuleEngineService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -9,6 +10,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/rules")
 public class RuleController {
+private static final Logger logger = LoggerFactory.getLogger(RuleController.class);
 
     private final RuleEngineService service;
 
@@ -19,7 +21,12 @@ public class RuleController {
 
     @PostMapping("/{id}/evaluate")
     public boolean evaluate(@PathVariable Long id, @RequestBody Map<String, Object> data) throws Exception {
-        return service.evaluate(id, data);
+        logger.debug("Init evaluate from controller");
+
+        boolean evaluation = service.evaluate(id, data);
+
+        logger.debug("Evaluated from controller");
+        return evaluation;
     }
 }
 
