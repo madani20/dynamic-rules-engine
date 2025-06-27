@@ -35,3 +35,98 @@ cd dynamic-rules-engine
 
 # Launch the API
 mvn spring-boot:run
+```
+
+## 📡 API Usage
+
+📥 Evaluate a Rule
+
+### 🔌 API Endpoint
+POST /api/rules/{id}/evaluate
+
+Evaluate user data against a stored rule with the given id.
+
+
+
+✅ Sample Request
+
+POST /api/rules/1/evaluate
+
+Content-Type: application/json
+
+{
+  "age": 17,
+  "income": 60000,
+  "country": "Italy"
+}
+
+---
+
+✅ Successful Response
+
+{
+  "valid": true,
+  "failedRules": []
+}
+
+
+❌ Error Response
+
+{
+  "valid": false,
+  "failedRules": ["age-rule"]
+}
+
+---
+
+### 🧠 Rule Format Examples
+
+Rules are defined as JSON trees using the following model:
+
+     ✔️ Simple Rule
+{
+  "id": "age-rule",
+  "type": "SIMPLE",
+  "field": "age",
+  "operator": ">=",
+  "value": 18
+}
+
+      ✔️ AND Rule
+{
+  "type": "AND",  
+  "rules": [
+  
+    { "type": "SIMPLE", "field": "age", "operator": ">", "value": 25 },
+    { "type": "SIMPLE", "field": "income", "operator": ">=", "value": 50000 }
+  ]
+}
+
+     ✔️  OR Rule
+
+{
+  "type": "OR",  
+  "rules": [
+  
+    { "id": "funct-rule", "type": "SIMPLE", "field": "employmentType", "operator": "==", "value": "Fonctionnaire" },
+    { "id": "cdi-rule", type": "SIMPLE", "field": "employmentType", "operator": "==", "value": "CDI" }
+  ]
+}
+
+
+---
+
+### 🧾 Documentation
+
+The full OpenAPI 3 specification is defined externally in the openapi.yaml file in the root of the project.
+#### 🌐 Preview Options:
+
+    Swagger Editor
+
+    Redocly Viewer
+
+    Insomnia/Postman import from YAMLan Import Tool
+---
+
+
+
