@@ -94,7 +94,7 @@ public class RuleEngineServiceTest {
     void testValidateInput_NullValueInMap() {
         Map<String, Object> dataWithNull = new HashMap<>();
         dataWithNull.put("age", 25);
-        dataWithNull.put("income", null); // ✅ Teste une valeur null
+        dataWithNull.put("income", null);
 
         Assertions.assertThrows(ValidateException.class, () -> {
             ruleEngineService.validate(7L, dataWithNull);
