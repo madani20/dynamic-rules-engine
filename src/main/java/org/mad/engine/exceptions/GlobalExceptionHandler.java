@@ -4,44 +4,27 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.time.LocalDateTime;
-import java.util.stream.Collectors;
 
 @ControllerAdvice
-public class GlobalExceptionHandler { //extends ResponseEntityExceptionHandler {
+public class GlobalExceptionHandler {
 
-    /**
-     *Gestion des exceptions //Cette méthode permet de récupérer proprement les erreurs de @Valid sur le @RequestBody
-     *
-     * @param ex
-     * @param request
-     * @return  ResponseEntity
-     */
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleValidationExceptions(
-            MethodArgumentNotValidException ex,
-            HttpServletRequest request) {
-
-        String errors = ex.getBindingResult().getFieldErrors().stream()
-                .map(error -> error.getField() + ": " + error.getDefaultMessage())
-                .collect(Collectors.joining(", "));
+    @ExceptionHandler(ValidateException.class)
+    public ResponseEntity<ErrorResponse> handleValidateException(ValidateException validateException,
+                                                                 HttpServletRequest request) {
 
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
-                errors,
-                "Validation Failed",
+                validateException.getMessage(),
+                "Invalid evaluation!",
                 request.getRequestURI(),
                 LocalDateTime.now()
         );
-
-        return ResponseEntity.badRequest().body(errorResponse);
+        return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(400));
     }
-
-
 
     @ExceptionHandler(RuleNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleRuleNotFoundException(RuleNotFoundException ruleNotFoundException,
@@ -50,14 +33,12 @@ public class GlobalExceptionHandler { //extends ResponseEntityExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 ruleNotFoundException.getMessage(),
-                "Invalid password options",
+                "Invalid rule!",
                 request.getRequestURI(),
                 LocalDateTime.now()
         );
         return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(400));
     }
-
-
 
     /**
      * Gestion des exceptions génériques.
@@ -77,6 +58,4 @@ public class GlobalExceptionHandler { //extends ResponseEntityExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
-
-
 }

@@ -1,6 +1,7 @@
 package org.mad.engine.models;
 
 import org.mad.engine.models.operators.OperatorStrategy;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
@@ -17,7 +18,7 @@ public class SimpleRule implements Rule{
 
 
     @Override
-    public boolean evaluate(Map<String, Object> data) {
+    public boolean validate(Map<String, Object> data) {
         Object fieldValue = data.get(field);
 
         return operator.evaluate(fieldValue, value);

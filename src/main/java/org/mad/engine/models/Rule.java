@@ -4,5 +4,5 @@ import java.util.Map;
 
 public interface Rule {
 
-    boolean evaluate (Map<String, Object> data);
+    boolean validate(Map<String, Object> data);
 }

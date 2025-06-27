@@ -1,0 +1,140 @@
+openapi: 3.0.3
+info:
+  title: Rule Evaluation API
+  description: |
+    This API allows the evaluation of business rules defined in a tree-like structure (AND, OR, SIMPLE).
+    Rules are persisted as JSON in the database and evaluated dynamically based on user-provided data.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api
+paths:
+  /rules/{id}/evaluate:
+    post:
+      summary: Evaluate data against a stored rule
+      operationId: evaluateRule
+      tags:
+        - Rule Engine
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier of the rule to evaluate
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Data to be validated against the rule
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+            examples:
+              validInput:
+                summary: Valid Input Data
+                value:
+                  age: 35
+                  income: 55000
+      responses:
+        '200':
+          description: Rule evaluation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationResponseDTO'
+              examples:
+                successfulValidation:
+                  summary: Successful validation
+                  value:
+                    valid: true
+                    failedRules: []
+                failedValidation:
+                  summary: Failed validation
+                  value:
+                    valid: false
+                    failedRules:
+                      - "rule-1"
+        '400':
+          description: Bad request or rule not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                missingField:
+                  summary: Data is missing required field
+                  value:
+                    status: 400
+                    error: "Invalid evaluation!"
+                    message: "Data contains null values."
+                    path: "/api/rules/1/evaluate"
+                    timestamp: "2025-06-27T12:00:00"
+                ruleNotFound:
+                  summary: Rule not found
+                  value:
+                    status: 400
+                    error: "Invalid rule!"
+                    message: "Rule not found: 1234"
+                    path: "/api/rules/1234/evaluate"
+                    timestamp: "2025-06-27T12:01:00"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                internalError:
+                  summary: Unexpected error
+                  value:
+                    status: 500
+                    error: "An unexpected error occurred."
+                    message: "Internal Server Error"
+                    path: "/api/rules/1/evaluate"
+                    timestamp: "2025-06-27T12:03:00"
+components:
+  schemas:
+    ValidationResponseDTO:
+      type: object
+      properties:
+        valid:
+          type: boolean
+          description: Whether the validation passed
+        failedRules:
+          type: array
+          description: List of rule IDs that failed validation
+          items:
+            type: string
+    RuleDTO:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum: [AND, OR, SIMPLE]
+        field:
+          type: string
+        operator:
+          type: string
+        value:
+          type: object
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/RuleDTO'
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+        message:
+          type: string
+        error:
+          type: string
+        path:
+          type: string
+        timestamp:
+          type: string
+          format: date-time

@@ -1,5 +1,7 @@
 package org.mad.engine.models;
 
+import org.springframework.stereotype.Component;
+
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +14,7 @@ public abstract class CompositeRule implements  Rule{
     }
 
     @Override
-    public boolean evaluate(Map<String, Object> data) {
+    public boolean validate(Map<String, Object> data) {
         return false;
     }
 }
