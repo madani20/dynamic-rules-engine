@@ -1,5 +1,3 @@
-
-````markdown
 # 🧠 Rule Evaluation API
 
 A powerful and extensible REST API for dynamic rule validation and decision-making. This API empowers systems to perform runtime validation of arbitrary JSON data against hierarchical logic trees defined and persisted in JSON.
