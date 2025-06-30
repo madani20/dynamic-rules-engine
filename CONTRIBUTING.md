@@ -16,7 +16,6 @@ Please take a moment to review this guide to understand how to contribute effect
     - [🔁 Submitting Pull Requests](#-submitting-pull-requests)
 - [🛠️ Development Setup](#-development-setup)
 - [✨ Style Guidelines](#-style-guidelines)
-- [🔐 Security](#-security)
 - [📄 License](#-license)
 
 ---
