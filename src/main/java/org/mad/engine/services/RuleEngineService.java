@@ -7,6 +7,7 @@ import org.mad.engine.dto.ValidationResponseDTO;
 import org.mad.engine.exceptions.ValidateException;
 import org.mad.engine.exceptions.RuleNotFoundException;
 import org.mad.engine.models.entities.RuleEntity;
+import org.mad.engine.models.types.RuleType;
 import org.mad.engine.repositories.RuleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,7 +66,7 @@ public class RuleEngineService {
         validationResponseDTO.setValid(true);
 
         switch (ruleDTO.getType()) {
-            case "AND":
+            case AND:
                 for (RuleDTO subRule : ruleDTO.getRules()) {
                     ValidationResponseDTO subValidationDTO = validateRule(subRule, dataFromUser);
                     if (!subValidationDTO.isValid()) {
@@ -75,7 +76,7 @@ public class RuleEngineService {
                 }
                 break;
 
-            case "OR":
+            case OR:
                 boolean anyValid = false;
                 for (RuleDTO subRule : ruleDTO.getRules()) {
                     ValidationResponseDTO subValidationDTO = validateRule(subRule, dataFromUser);
@@ -91,7 +92,7 @@ public class RuleEngineService {
                 }
                 break;
 
-            case "SIMPLE":
+            case SIMPLE:
                 boolean valid = validateSimpleRule(ruleDTO, dataFromUser);
                 validationResponseDTO.setValid(valid);
                 if (!valid) {
