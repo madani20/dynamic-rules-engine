@@ -125,23 +125,21 @@ public class RuleEngineService {
         if (fieldValue instanceof Number && expectedValue instanceof Number) {
             double valueProvided = ((Number) fieldValue).doubleValue();
             double ruleValue = ((Number) expectedValue).doubleValue();
-            switch (operator) {
-                case ">=": return valueProvided >= ruleValue;
-                case "<=": return valueProvided <= ruleValue;
-                case ">": return valueProvided > ruleValue;
-                case "<": return valueProvided < ruleValue;
-                case "==": return valueProvided == ruleValue;
-                case "!=": return valueProvided != ruleValue;
-
-                default: throw new ValidateException("Unsupported operator: " + operator);
-            }
+            return switch (operator) {
+                case ">=" -> valueProvided >= ruleValue;
+                case "<=" -> valueProvided <= ruleValue;
+                case ">" -> valueProvided > ruleValue;
+                case "<" -> valueProvided < ruleValue;
+                case "==" -> valueProvided == ruleValue;
+                case "!=" -> valueProvided != ruleValue;
+                default -> throw new ValidateException("Unsupported operator: " + operator);
+            };
         } else {
-            switch (operator) {
-                case "==": return fieldValue.equals(expectedValue);
-                case "!=": return !fieldValue.equals(expectedValue);
-
-                default: throw new ValidateException("Unsupported operator for type: " + operator);
-            }
+            return switch (operator) {
+                case "==" -> fieldValue.equals(expectedValue);
+                case "!=" -> !fieldValue.equals(expectedValue);
+                default -> throw new ValidateException("Unsupported operator for type: " + operator);
+            };
         }
     }
 
@@ -167,7 +165,6 @@ public class RuleEngineService {
         if (data == null || data.isEmpty()) {
             throw new ValidateException("Data map is null or empty.");
         }
-
         boolean hasNullValues = data.values().stream().anyMatch(Objects::isNull);
         if (hasNullValues) {
             throw new ValidateException("Data contains null values.");
